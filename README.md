@@ -39,18 +39,23 @@ Ajout des bibliothèques `ESP8266WiFi` et `WifiClient` pour permettre la connexi
 
 1. Création d'un fichier de configuration pour y stocker les informations de connexion telle que le SSID ou le password. 
     ```
+    // config.h
 
     #ifndef CONFIG_H
     #define CONFIG_H
 
     // Informations WiFi
-    const char* ssid = "SSID";
-    const char* password = "PASSWORD";
+    const char* ssid = "TON_SSID";
+    const char* password = "TON_MOT_DE_PASSE";
 
     // Adresse IP du serveur ESP8266
-    const char* serverIP = "Adresse IP";  
+    const char* serverESPIP = "192.168.1.53";
+
+    // URL du serveur web hébergé
+    const char* webServerURL = "https://thermometre.corentinmarcoux.fr"; 
 
     #endif
+
 
 2. Modification du code client pour ajouter la configuration WiFi.
     ```

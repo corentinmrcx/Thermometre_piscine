@@ -7,7 +7,7 @@
 #include <WiFiClient.h>
 
 // Information de connexion
-#include "../config.h"
+#include "config.h"
 
 #define ONE_WIRE_BUS 4
 OneWire oneWire(ONE_WIRE_BUS);
@@ -20,9 +20,9 @@ void setup() {
   sensors.begin();
   delay(10);
 
-  Wifi.begin(ssid, password);
+  WiFi.begin(ssid, password);
   while (WiFi.status()!= WL_CONNECTED){
-    delay(1000)
+    delay(1000);
     Serial.println("Connexion en cours");
   }
   Serial.println("Connecté au WIFI !");
@@ -33,7 +33,7 @@ void loop() {
   sensors.requestTemperatures();
   float temperature = sensors.getTempCByIndex(0);
 
-  if (client.connect(serverIP, 80)){
+  if (client.connect(serverESPIP, 80)){
   String url = "/temperature?value=" + String(temperature);
   client.print(String("GET ") + url + " HTTP/1.1\r\n" +
                "Host: " + serverESPIP + "\r\n" +
