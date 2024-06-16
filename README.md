@@ -41,22 +41,9 @@ Ajout des bibliothèques `ESP8266WiFi` et `WifiClient` pour permettre la connexi
     ```
     // config.h
 
-    #ifndef CONFIG_H
-    #define CONFIG_H
-
-    // Informations WiFi
-    const char* ssid = "TON_SSID";
-    const char* password = "TON_MOT_DE_PASSE";
-
-    // Adresse IP du serveur ESP8266
-    const char* serverESPIP = "192.168.1.53";
-
-    // URL du serveur web hébergé
-    const char* webServerURL = "https://thermometre.corentinmarcoux.fr"; 
-
-    #endif
-
-
+    #define SSID "Livebox-4810"
+    #define PASSWORD "7SypWJtqvaLHgYwHKV"
+    ```
 2. Modification du code client pour ajouter la configuration WiFi.
     ```
     // Bibliothèques Wifi
@@ -65,12 +52,13 @@ Ajout des bibliothèques `ESP8266WiFi` et `WifiClient` pour permettre la connexi
 
     // Information de connexion
     #include "config.h"
+    const char* serverESPIP = "192.168.1.53"; // Adresse IP de l'ESP8266 serveur
 
     WiFiClient client;
 
     void setup() {
 
-    Wifi.begin(ssid, password);
+    Wifi.begin(SSID, PASSWORD);
     while (WiFi.status()!= WL_CONNECTED){
         delay(1000)
         Serial.println("Connexion en cours");
@@ -81,10 +69,10 @@ Ajout des bibliothèques `ESP8266WiFi` et `WifiClient` pour permettre la connexi
 
     void loop() {
 
-    if (client.connect(serverIP, 80)){
+    if (client.connect(serverESPIP, 80)){
     String url = "/temperature?value=" + String(temperature);
     client.print(String("GET ") + url + " HTTP/1.1\r\n" +
-                "Host: " + serverIP + "\r\n" +
+                "Host: " + serverESPIP + "\r\n" +
                 "Connection: close\r\n\r\n");
     }
     delay(5000);
