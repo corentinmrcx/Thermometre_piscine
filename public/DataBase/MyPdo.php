@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace DataBase;
+
 /**
  * Classe permettant de retourner une instance unique et configurée de PDO.
  *

@@ -1,7 +1,11 @@
 <?php
 
 declare(strict_types=1);
-require_once "../DataBase/MyPdo.php";
+namespace Class;
+
+use DataBase\MyPdo;
+
+namespace Class;
 class Temperature
 {
     private ?int $id;
