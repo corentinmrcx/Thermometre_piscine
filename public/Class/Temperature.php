@@ -33,13 +33,13 @@ SQL
         return $this;
     }
 
-    public function getLastTemperature(): Temperature{
+    public static function getLastTemperature(){
         $stmt = MyPdo::getInstance()->prepare(
             <<<'SQL'
             SELECT id, temperature FROM sensorData ORDER BY id DESC LIMIT 1
 SQL
         );
-        return $this;
+        return $stmt->fetch();
     }
 
     public static function getAllTemperatures(): Array{
