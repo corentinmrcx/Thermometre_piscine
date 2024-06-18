@@ -1,12 +1,13 @@
 <?php
 
 declare(strict_types=1);
-require_once "Class/Temperature.php";
 
-$key = "a5vf7adsm";
+use Class\Temperature;
+require_once "../config.php";
+
 
 if (!empty($_POST["value"])) {
-    if ($_POST["key"] === $key){
+    if ($_POST["key"] === SECURITY_KEY){
         $temperature = (float) $_POST["value"];
         $newTemp = new Temperature($temperature);
         $newTemp ->insertTemperature($temperature);
