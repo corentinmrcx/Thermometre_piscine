@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Class;
 
 use DataBase\MyPdo;
+require_once __DIR__ . '/../DataBase/MyPdo.php';
 
-namespace Class;
 class Temperature
 {
     private ?int $id;
@@ -33,31 +33,55 @@ SQL
         return $this;
     }
 
-    public static function getLastTemperature(){
+    public static function getLastTemperature(): ?Temperature{
         $stmt = MyPdo::getInstance()->prepare(
             <<<'SQL'
             SELECT id, temperature FROM sensorData ORDER BY id DESC LIMIT 1
 SQL
         );
-        return $stmt->fetch();
+        $result = $stmt->execute();
+
+        if ($result) {
+            $row = $stmt->fetch();
+            if ($row) {
+                return new Temperature((float) $row['temperature']);
+            }
+        }
+
+        return null;
     }
 
-    public static function getAllTemperatures(): Array{
+    public static function getAllTemperatures(): array{
         $stmt = MyPdo::getInstance()->prepare(
             <<<'SQL'
             SELECT id, temperature FROM sensorData ORDER BY id DESC
 SQL
         );
-        return $stmt->fetchAll();
+        $stmt->execute();
+        $rows =  $stmt->fetchAll();
+
+        $temperaturesTab = [];
+        foreach ($rows as $row) {
+            $temperaturesTab[] = new Temperature((float) $row['temperature']);
+        }
+
+        return $temperaturesTab;
     }
 
-    public static function maxTemperature(): int{
+    public static function maxTemperature(): float{
         $stmt = MyPdo::getInstance()->prepare(
             <<<'SQL'
-            SELECT MAX(temperature) FROM sensorData WHERE TO_DATE(time, "dd/mm/YYYY") = SYSDATE ORDER BY id DESC
+            SELECT MAX(temperature) as max_temp FROM sensorData WHERE DATE(time) = CURDATE()
 SQL
         );
-        return $stmt->fetchColumn();
+        $stmt->execute();
+        $row =  $stmt->fetch();
+
+        return (float)$row['max_temp'];
+    }
+
+    public function __toString(): string {
+        return (string) $this->temperature;
     }
 
 }

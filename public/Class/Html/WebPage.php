@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 namespace Html;
+
+require_once "StringEscaper.php";
 class WebPage
 {
     use StringEscaper;
