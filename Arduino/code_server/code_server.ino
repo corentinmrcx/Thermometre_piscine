@@ -18,26 +18,20 @@ void handleRoot(){
 void handleTemperature(){
   if (server.arg("value") != ""){
     temperature = server.arg("value").toFloat();
-    sendTemperatureToWebServer(temperature);
+    sendTemperatureToWebServer(temperature, KeyValue);
   }
   handleRoot();
 }
 
-void sendTemperatureToWebServer(float temp){
+void sendTemperatureToWebServer(float temp, String key){
     HTTPClient http;
     http.begin(wifiClient, webServerURL);
 
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-    String data = "key=" + KeyValue + "&value=" + String(temp);
+    String data = "key=" + key + "&value=" + String(temp);
     int httpResponseCode = http.POST(data);
-    
-    if (httpResponseCode > 0) {
-      String response = http.getString();
-      Serial.println("Response: " + response);
-    } else {
-      Serial.println("Error on sending POST: " + String(httpResponseCode));
-    }
-  
+
+    Serial.println("Envoie des données");
     http.end();
 }
 
