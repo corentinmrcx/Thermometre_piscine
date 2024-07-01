@@ -6,7 +6,7 @@
 #include "config.h"
 
 ESP8266WebServer server(80);
-WiFiClient wifiClient;
+WiFiClientSecure wifiClient;
 
 float temperature = 0.0;
 
@@ -17,7 +17,7 @@ void handleRoot(){
 
 void handleTemperature(){
   if (server.arg("value") != ""){
-    temperature = server.arg("value").toFloat();
+    float temperature = server.arg("value").toFloat();
     sendTemperatureToWebServer(temperature, KeyValue);
   }
   handleRoot();
@@ -25,13 +25,27 @@ void handleTemperature(){
 
 void sendTemperatureToWebServer(float temp, String key){
     HTTPClient http;
+    wifiClient.setInsecure();
     http.begin(wifiClient, webServerURL);
 
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
     String data = "key=" + key + "&value=" + String(temp);
     int httpResponseCode = http.POST(data);
 
-    Serial.println("Envoie des données");
+    Serial.print("Envoie des données : ");
+    Serial.println(data);
+    Serial.print("Code de réponse HTTP : ");
+    Serial.println(httpResponseCode);
+    
+    if (httpResponseCode > 0) {
+        String response = http.getString();
+        Serial.print("Réponse du serveur : ");
+        Serial.println(response);
+    } else {
+        Serial.print("Erreur lors de l'envoi des données : ");
+        Serial.println(http.errorToString(httpResponseCode).c_str());
+    }    
+    
     http.end();
 }
 
