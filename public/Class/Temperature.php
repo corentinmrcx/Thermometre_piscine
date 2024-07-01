@@ -26,7 +26,7 @@ class Temperature
     public function insertTemperature(float $temperature): Temperature{
         $stmt = MyPdo::getInstance()->prepare(
             <<<'SQL'
-            INSERT INTO sensorData (temperature) VALUES (:temperature)
+            INSERT INTO SensorData (temperature) VALUES (:temperature)
 SQL
         );
         $stmt ->execute(["temperature" => $temperature]);
@@ -36,7 +36,7 @@ SQL
     public static function getLastTemperature(): ?Temperature{
         $stmt = MyPdo::getInstance()->prepare(
             <<<'SQL'
-            SELECT id, temperature FROM sensorData ORDER BY id DESC LIMIT 1
+            SELECT id, temperature FROM SensorData ORDER BY id DESC LIMIT 1
 SQL
         );
         $result = $stmt->execute();
@@ -54,7 +54,7 @@ SQL
     public static function getAllTemperatures(): array{
         $stmt = MyPdo::getInstance()->prepare(
             <<<'SQL'
-            SELECT id, temperature FROM sensorData ORDER BY id DESC
+            SELECT id, temperature FROM SensorData ORDER BY id DESC
 SQL
         );
         $stmt->execute();
@@ -71,7 +71,7 @@ SQL
     public static function maxTemperature(): float{
         $stmt = MyPdo::getInstance()->prepare(
             <<<'SQL'
-            SELECT MAX(temperature) as max_temp FROM sensorData WHERE DATE(time) = CURDATE()
+            SELECT MAX(temperature) as max_temp FROM SensorData WHERE DATE(time) = CURDATE()
 SQL
         );
         $stmt->execute();
