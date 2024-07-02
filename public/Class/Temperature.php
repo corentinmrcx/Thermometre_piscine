@@ -102,7 +102,7 @@ SQL
     public static function avgTemperature(): float{
         $stmt = MyPdo::getInstance()->prepare(
             <<<'SQL'
-            SELECT AVG(temperature) as avg_temp FROM SensorData WHERE DATE(time) = CURDATE()
+            SELECT ROUND(AVG(temperature), 2) as avg_temp FROM SensorData WHERE DATE(time) = CURDATE()
 SQL
         );
         $stmt->execute();
