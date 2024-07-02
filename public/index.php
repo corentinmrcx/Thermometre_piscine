@@ -13,19 +13,61 @@ $webPage -> appendCssUrl("styles.css");
 
 $lastTemperature = Temperature::getLastTemperature();
 $allTemperature = Temperature::getAllTemperatures();
+
 $max = Temperature::maxTemperature();
+$min = Temperature::minTemperature();
+$avg = Temperature::avgTemperature();
+
+
 $webPage->appendContent(
     <<<HTML
-        <div class="container">
-            <p>Dernière temperature : {$lastTemperature}</p>
-            <p>Temperature maximal : {$max}</p>
-            <p>Les dernières temperatures :</p>
+    <div class="container">
+        <div class="temperature">
+            <div class="temp-value">{$lastTemperature}</div>
+            <div class="time">{$lastTemperature->getTime()}</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-label">Min</div>
+                <div class="stat-value">{$min}</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Max</div>
+                <div class="stat-value">{$max}</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Moy</div>
+                <div class="stat-value">{$avg}</div>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th>Heure</th>
+                    <th>Température</th>
+                </tr>
+                <tr>
 HTML
 );
 
 for ($i = 0; $i < count($allTemperature); $i++) {
-    $webPage->appendContent("$allTemperature[$i]<br>");
+    $webPage->appendContent(
+        <<<HTML
+                <tr>
+                    <td>{$allTemperature[$i]->getTime()}</td>
+                    <td>{$allTemperature[$i]->getTemperature()}</td>
+                </tr>
+HTML);
 }
 
-$webPage -> appendContent("</div>");
+$webPage -> appendContent(
+    <<<HTML
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+HTML);
 echo $webPage->toHTML();
