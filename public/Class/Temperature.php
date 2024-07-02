@@ -10,9 +10,12 @@ class Temperature
 {
     private ?int $id;
     private float $temperature;
+    private ?string $time;
 
-    public function __construct(float $temperature, ?int $id = null){
+    public function __construct(float $temperature, ?string $time, ?int $id = null){
         $this->temperature = $temperature;
+        $this->time = $time;
+        $this -> id = $id;
     }
 
     public function getId(): ?int{
@@ -21,6 +24,10 @@ class Temperature
 
     public function getTemperature(): float{
         return $this->temperature;
+    }
+
+    public function getTime(): ?string{
+        return $this->time;
     }
 
     public function insertTemperature(float $temperature): Temperature{
@@ -36,7 +43,7 @@ SQL
     public static function getLastTemperature(): ?Temperature{
         $stmt = MyPdo::getInstance()->prepare(
             <<<'SQL'
-            SELECT id, temperature FROM SensorData ORDER BY id DESC LIMIT 1
+            SELECT id, temperature, DATE_FORMAT(time, "%H:%i") FROM SensorData ORDER BY id DESC LIMIT 1
 SQL
         );
         $result = $stmt->execute();
@@ -44,7 +51,7 @@ SQL
         if ($result) {
             $row = $stmt->fetch();
             if ($row) {
-                return new Temperature((float) $row['temperature']);
+                return new Temperature((float) $row['temperature'], (string) $row['DATE_FORMAT(time, "%H:%i")']);
             }
         }
 
@@ -54,7 +61,7 @@ SQL
     public static function getAllTemperatures(): array{
         $stmt = MyPdo::getInstance()->prepare(
             <<<'SQL'
-            SELECT id, temperature FROM SensorData ORDER BY id DESC
+            SELECT id, temperature, DATE_FORMAT(time, "%H:%i") FROM SensorData ORDER BY id DESC
 SQL
         );
         $stmt->execute();
@@ -62,7 +69,7 @@ SQL
 
         $temperaturesTab = [];
         foreach ($rows as $row) {
-            $temperaturesTab[] = new Temperature((float) $row['temperature']);
+            $temperaturesTab[] = new Temperature((float) $row['temperature'], $row['DATE_FORMAT(time, "%H:%i")']);
         }
 
         return $temperaturesTab;
@@ -79,6 +86,32 @@ SQL
 
         return (float)$row['max_temp'];
     }
+
+    public static function minTemperature(): float{
+        $stmt = MyPdo::getInstance()->prepare(
+            <<<'SQL'
+            SELECT MIN(temperature) as min_temp FROM SensorData WHERE DATE(time) = CURDATE()
+SQL
+        );
+        $stmt->execute();
+        $row =  $stmt->fetch();
+
+        return (float)$row['min_temp'];
+    }
+
+    public static function avgTemperature(): float{
+        $stmt = MyPdo::getInstance()->prepare(
+            <<<'SQL'
+            SELECT AVG(temperature) as avg_temp FROM SensorData WHERE DATE(time) = CURDATE()
+SQL
+        );
+        $stmt->execute();
+        $row =  $stmt->fetch();
+
+        return (float)$row['avg_temp'];
+    }
+
+
 
     public function __toString(): string {
         return (string) $this->temperature;
