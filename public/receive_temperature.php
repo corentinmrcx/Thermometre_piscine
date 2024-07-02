@@ -17,6 +17,5 @@ if (isset($_POST["value"])) {
     }
 }
 else{
-    $temperature = "Aucune donnée de temperature disponible";
-    echo $temperature;
+    echo "Aucune donnée de temperature disponible";
 }
