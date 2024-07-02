@@ -1,0 +1,81 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100vh;
+    width: 100vw;
+
+    font-family: Arial, sans-serif;
+}
+
+/*---------------------------------------------*/
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 30px;
+    gap: 20px;
+}
+
+.temperature {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.temperature .temp-value {
+    font-size: 60px;
+    font-weight: bold;
+}
+
+.temperature .time {
+    font-size: 18px;
+    font-style: italic;
+    color: gray;
+}
+
+/*---------------------------------------------*/
+.stats {
+    display: flex;
+    justify-content: space-around;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-label {
+    font-weight: bold;
+}
+
+/*---------------------------------------------*/
+.table-container{
+    flex: 2;
+    overflow-y: scroll;
+    border: 1px solid black;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #000;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: gray;
+    font-weight: bold;
+}
