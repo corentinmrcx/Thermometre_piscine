@@ -8,7 +8,7 @@
 
 // Information de connexion
 #include "config.h"
-const char* serverESPIP = "192.168.1.53"; // Adresse IP de l'ESP8266 serveur
+const char* serverESPIP = "192.168.4.1"; // Adresse IP de l'ESP8266 serveur
 
 #define ONE_WIRE_BUS 4
 OneWire oneWire(ONE_WIRE_BUS);
@@ -40,5 +40,5 @@ void loop() {
                "Host: " + serverESPIP + "\r\n" +
                "Connection: close\r\n\r\n");
 }
-delay(5000);
+delay(30000);
 }
