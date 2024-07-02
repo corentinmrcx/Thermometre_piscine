@@ -5,6 +5,9 @@
 // Information de connexion
 #include "config.h"
 
+const char* AP_ssid = "ESP_SERVER";
+const char* AP_password = "password";
+
 ESP8266WebServer server(80);
 WiFiClientSecure wifiClient;
 
@@ -51,6 +54,13 @@ void sendTemperatureToWebServer(float temp, String key){
 
 void setup() {
   Serial.begin(115200);
+
+  WiFi.softAP(AP_ssid, AP_password);
+  
+  IPAddress IP = WiFi.softAPIP();
+  Serial.print("AP IP address: ");
+  Serial.println(IP);
+  
   WiFi.begin(SSID, PASSWORD);
   
   while (WiFi.status()!= WL_CONNECTED){
