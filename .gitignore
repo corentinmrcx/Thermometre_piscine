@@ -2,3 +2,4 @@ config.h
 .idea
 .mypdo.ini
 public/config.php
+tests/
