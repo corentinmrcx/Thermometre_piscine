@@ -40,5 +40,5 @@ void loop() {
                "Host: " + serverESPIP + "\r\n" +
                "Connection: close\r\n\r\n");
 }
-delay(30000);
+delay(1800000);
 }
