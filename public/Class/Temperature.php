@@ -112,6 +112,36 @@ SQL
     }
 
 
+    public static function getTemperatureStats(): string {
+        $stmt = MyPdo::getInstance()->prepare(
+            "SELECT 
+                DAYNAME(time) as day, 
+                MIN(temperature) as min_temp, 
+                AVG(temperature) as avg_temp, 
+                MAX(temperature) as max_temp
+             FROM SensorData
+             WHERE DATE(time) >= CURDATE() - INTERVAL 7 DAY
+             GROUP BY DAYNAME(time)
+             ORDER BY FIELD(DAYNAME(time), 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')");
+        $stmt->execute();
+        $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $englishToFrenchDays = [
+            'Monday' => 'Lundi',
+            'Tuesday' => 'Mardi',
+            'Wednesday' => 'Mercredi',
+            'Thursday' => 'Jeudi',
+            'Friday' => 'Vendredi',
+            'Saturday' => 'Samedi',
+            'Sunday' => 'Dimanche'
+        ];
+
+        foreach ($data as &$row) {
+            $row['day'] = $englishToFrenchDays[$row['day']];
+        }
+
+        return json_encode($data);
+    }
 
     public function __toString(): string {
         return (string) $this->temperature;
