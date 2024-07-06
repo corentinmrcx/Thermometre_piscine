@@ -51,6 +51,7 @@ body {
 
 /*---------------------------------------------*/
 .table-container{
+    flex: 1;
     display: flex;
     border: 1px solid black;
     overflow-y: scroll;
@@ -70,4 +71,19 @@ th, td {
 th {
     background-color: gray;
     font-weight: bold;
+}
+
+/*---------------------------------------------*/
+.chart{
+    flex: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chart canvas {
+    max-width: 800px;
+    width: 100%;
+    height: auto;
 }
