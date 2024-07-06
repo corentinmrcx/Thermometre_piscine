@@ -29,7 +29,7 @@ HTML
 $webPage->appendContent(
     <<<HTML
     <div class="temperature">
-        <div class="temp-value">{$lastTemperature}</div>
+        <div class="temp-value">{$lastTemperature}&#xB0;C</div>
         <div class="time">{$lastTemperature->getTime()}</div>
     </div>
 
