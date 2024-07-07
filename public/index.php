@@ -109,21 +109,21 @@ $webPage -> appendContent(
                             data: minTemps,
                             backgroundColor: 'rgba(75, 192, 192, 0.2)',
                             borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1
+                            borderWidth: 1, 
                         },
                         {
                             label: 'Avg',
                             data: avgTemps,
                             backgroundColor: 'rgba(54, 162, 235, 0.2)',
                             borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1
+                            borderWidth: 1,
                         },
                         {
                             label: 'Max',
                             data: maxTemps,
                             backgroundColor: 'rgba(255, 99, 132, 0.2)',
                             borderColor: 'rgba(255, 99, 132, 1)',
-                            borderWidth: 1
+                            borderWidth: 1,
                         }
                     ]
                 },
@@ -131,18 +131,18 @@ $webPage -> appendContent(
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Températures Min, Moy, Max - Derniers 7 jours'
+                            text: 'Températures Min, Moy, Max - 7 derniers jours'
                         }
                     },
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
                         x: {
-                            stacked: true
+                            stacked: false
                         },
                         y: {
-                            stacked: true,
-                            beginAtZero: true
+                            stacked: false,
+                            beginAtZero: true,
                         }
                     }
                 }
@@ -151,4 +151,5 @@ $webPage -> appendContent(
     </script>
 </html>
 HTML);
+
 echo $webPage->toHTML();
