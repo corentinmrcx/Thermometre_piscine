@@ -63,7 +63,7 @@ for ($i = 0; $i < count($allTemperature); $i++) {
         <<<HTML
                 <tr>
                     <td>{$allTemperature[$i]->getTime()}</td>
-                    <td>{$allTemperature[$i]->getTemperature()}</td>
+                    <td>{$allTemperature[$i]->getTemperature()}&#xB0;C</td>
                 </tr>
 HTML);
 }
