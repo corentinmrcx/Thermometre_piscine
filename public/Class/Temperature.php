@@ -117,7 +117,7 @@ SQL
             "SELECT 
                 DAYNAME(time) as day, 
                 MIN(temperature) as min_temp, 
-                AVG(temperature) as avg_temp, 
+                ROUND(AVG(temperature), 2) as avg_temp, 
                 MAX(temperature) as max_temp
              FROM SensorData
              WHERE DATE(time) >= CURDATE() - INTERVAL 7 DAY
