@@ -61,7 +61,7 @@ SQL
     public static function getAllTemperatures(): array{
         $stmt = MyPdo::getInstance()->prepare(
             <<<'SQL'
-            SELECT id, temperature, DATE_FORMAT(time, "%H:%i") FROM SensorData ORDER BY id DESC
+            SELECT id, temperature, DATE_FORMAT(time, "%d/%m - %Hh%i") FROM SensorData ORDER BY id DESC
 SQL
         );
         $stmt->execute();
@@ -69,7 +69,7 @@ SQL
 
         $temperaturesTab = [];
         foreach ($rows as $row) {
-            $temperaturesTab[] = new Temperature((float) $row['temperature'], $row['DATE_FORMAT(time, "%H:%i")']);
+            $temperaturesTab[] = new Temperature((float) $row['temperature'], $row['DATE_FORMAT(time, "%d/%m - %Hh%i")']);
         }
 
         return $temperaturesTab;
