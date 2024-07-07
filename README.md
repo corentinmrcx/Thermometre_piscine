@@ -7,7 +7,7 @@ Projet Arduino d'un thermomètre connecté pour surveiller la température de ma
 ![Cablage DS18B20](img/cablage_ds18b20.png)
 ![Shema ESP8266](img/esp8266_shema.png)
 
-## 2.Programmation de l’ESP8266
+## 2. Programmation de l’ESP8266
 ### Récupérer une température sur l'ESP client :
 
 - Écrire un programme Arduino pour lire la température du capteur DS18B20.
@@ -223,3 +223,184 @@ Ajout des bibliothèques `ESP8266WiFi` et `ESP8266WebServer` pour pouvoir utilis
     server.handleClient();
     }
     ```
+
+## 3. Développement de la Page WEB
+### 1. Recevoir les données de température sur le serveur WEB 
+**receive_temperature.php** :  Ce script PHP reçoit les données de température via une requête POST, vérifie une clé de sécurité, et insère la nouvelle température dans la base de données si la clé est correcte.
+
+### 2. Traiter les données de température
+**Temperature.php** : Cette classe représente une température avec son identifiant, sa valeur et le moment de l'enregistrement. Elle inclut des méthodes pour insérer une nouvelle température, récupérer les dernières températures enregistrées, ainsi que les statistiques de températures (max, min, moyenne).
+
+- ``insertTemperature`` : Insère une nouvelle température dans la base de données.
+- ``getLastTemperature`` : Récupère la dernière température enregistrée.
+- ``getAllTemperatures`` : Récupère toutes les températures enregistrées.
+- ``maxTemperature`` : Récupère la température maximale du jour.
+- ``minTemperature`` : Récupère la température minimale du jour.
+- ``avgTemperature`` : Récupère la température moyenne du jour.
+- ``getTemperatureStats`` : Récupère les statistiques des températures des 7 derniers jours.
+- ``__toString`` : Convertit l'objet Temperature en chaîne de caractères.
+
+### 3. Afficher ces données
+**index.php** : Cette page web affiche la dernière température enregistrée, ainsi que des statistiques (min, max, moyenne) et un tableau de toutes les températures.
+Elle utilise la bibliothèque Chart.js pour afficher un graphique des températures minimales, moyennes et maximales des 7 derniers jours.
+
+Pour concevoir cette page, on utilise la classe ``WebPage.php`` qui permet de construire une page HTML :
+
+    <?php
+    
+    declare(strict_types=1);
+    
+    namespace Html;
+    
+    require_once "StringEscaper.php";
+    class WebPage
+    {
+    use StringEscaper;
+    
+        private string $head;
+        private string $title;
+        private string $body;
+    
+        public function __construct(string $title = "")
+        {
+            $this -> title = $title;
+            $this -> head = "";
+            $this -> body = "";
+        }
+    
+        /**
+         * Retourne le contenue de HEAD.
+         * @return string
+         */
+        public function getHead(): string
+        {
+            return $this->head;
+        }
+    
+        /**
+         * Retourne le titre de la page.
+         * @return string
+         */
+        public function getTitle(): string
+        {
+            return $this->title;
+        }
+    
+        /**
+         * Modificateur de la valeur du titre.
+         * @param string $title
+         */
+        public function setTitle(string $title): void
+        {
+            $this->title = $title;
+        }
+    
+        /**
+         * Retourne le contenue du body.
+         * @return string
+         */
+        public function getBody(): string
+        {
+            return $this->body;
+        }
+    
+        /**
+         * Fonction qui ajoute du contenu a la balise HEAD.
+         * @param string $content
+         * @return void
+         */
+        public function appendToHead(string $content): void
+        {
+            $this -> head .= $content;
+        }
+    
+        /**
+         * Fonction qui ajoute du CSS.
+         * @param string $css
+         * @return void
+         */
+        public function appendCss(string $css): void
+        {
+            $this -> head .= <<<HTML
+            <style>{$css}</style>
+            HTML;
+        }
+    
+        /**
+         * Fonction qui ajoute la balise link vers le fichier css.
+         * @param string $url
+         * @return void
+         */
+        public function appendCssUrl(string $url): void
+        {
+            $this -> head .= <<<HTML
+            <link rel="stylesheet" href={$url}>
+        HTML;
+        }
+    
+        /**
+         * Fonction qui ajoute un script JS.
+         * @param string $js
+         * @return void
+         */
+        public function appendJS(string $js): void
+        {
+            $this -> head .= <<<HTML
+            <script>{$js}</script>
+            HTML;
+        }
+    
+        /**
+         * Fonction qui ajoute un lien vers un fichier JS.
+         * @param string $url
+         * @return void
+         */
+        public function appendJsUrl(string $url): void
+        {
+            $this -> head .= <<<HTML
+            <script src="{$url}"></script>
+        HTML;
+        }
+    
+        /**
+         * Fonction qui ajoute du contenue a la balise body.
+         * @param string $content
+         * @return void
+         */
+        public function appendContent(string $content): void
+        {
+            $this -> body .= $content;
+        }
+    
+        /**
+         * Fonction qui convertit en HTML nos différentes instances.
+         * @return string
+         */
+        public function toHTML(): string
+        {
+            return <<<HTML
+            <!doctype html>
+            <html lang="fr">
+            <head>
+            <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+                <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                <title>{$this->title}</title>
+                {$this -> head}
+            </head>
+            <body>
+              {$this->body}
+            </body>
+            </html>
+    HTML;
+    }
+    
+        /**
+         * Fonction qui donne la date et l'heure de la dernière modification du script principale.
+         * @return string
+         */
+        public function getLastModification(): string
+        {
+            return date("d F Y  H:i:s.", getlastmod());
+        }
+    }
