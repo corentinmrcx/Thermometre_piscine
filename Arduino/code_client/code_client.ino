@@ -16,21 +16,30 @@ DallasTemperature sensors(&oneWire);
 
 WiFiClient client;
 
-void setup() {
-  Serial.begin(115200);
-  sensors.begin();
-  delay(10);
-
+void connectToWifi(){
   WiFi.begin(SSID, PASSWORD);
   while (WiFi.status()!= WL_CONNECTED){
     delay(1000);
     Serial.println("Connexion en cours");
   }
   Serial.println("Connecté au WIFI !");
-  
+}
+
+void setup() {
+  Serial.begin(115200);
+  sensors.begin();
+  delay(50);
+
+  connectToWifi();
+  delay(100);
 }
 
 void loop() {
+  if (WiFi.status()!= WL_CONNECTED){
+    Serial.println("Wifi non connecté, reconnexion...");
+    connectToWifi();
+  }
+  
   sensors.requestTemperatures();
   float temperature = sensors.getTempCByIndex(0);
 
@@ -40,5 +49,5 @@ void loop() {
                "Host: " + serverESPIP + "\r\n" +
                "Connection: close\r\n\r\n");
 }
-delay(1800000);
+  delay(1800000);
 }
