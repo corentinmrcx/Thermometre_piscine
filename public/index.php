@@ -39,12 +39,12 @@ $webPage->appendContent(
             <div class="stat-value">{$min}</div>
         </div>
         <div class="stat">
-            <div class="stat-label">Max</div>
-            <div class="stat-value">{$max}</div>
-        </div>
-        <div class="stat">
             <div class="stat-label">Moy</div>
             <div class="stat-value">{$avg}</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Max</div>
+            <div class="stat-value">{$max}</div>
         </div>
         </div>
         
@@ -79,30 +79,17 @@ $webPage -> appendContent(
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const data = JSON.parse('{$temperatureStatsJson}');
-            console.log(data);
-            const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
-            const minTemps = [];
-            const avgTemps = [];
-            const maxTemps = [];
 
-            days.forEach(day => {
-                const stats = data.find(d => d.day === day);
-                if (stats) {
-                    minTemps.push(stats.min_temp);
-                    avgTemps.push(stats.avg_temp);
-                    maxTemps.push(stats.max_temp);
-                } else {
-                    minTemps.push(0);
-                    avgTemps.push(0);
-                    maxTemps.push(0);
-                }
-            });
+            const dates = data.map(d => d.days); 
+            const minTemps = data.map(d => d.min_temp);
+            const avgTemps = data.map(d => d.avg_temp);
+            const maxTemps = data.map(d => d.max_temp);
 
             const ctx = document.getElementById('temperatureChart').getContext('2d');
             const temperatureChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: days,
+                    labels: dates,
                     datasets: [
                         {
                             label: 'Min',
@@ -112,7 +99,7 @@ $webPage -> appendContent(
                             borderWidth: 1, 
                         },
                         {
-                            label: 'Avg',
+                            label: 'Moy',
                             data: avgTemps,
                             backgroundColor: 'rgba(54, 162, 235, 0.2)',
                             borderColor: 'rgba(54, 162, 235, 1)',
@@ -131,7 +118,7 @@ $webPage -> appendContent(
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Températures Min, Moy, Max - 7 derniers jours'
+                            text: 'Températures - 7 derniers jours'
                         }
                     },
                     responsive: true,
