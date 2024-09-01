@@ -144,6 +144,17 @@ SQL
         return json_encode($data);
     }
 
+    public static function getLastTemperatureTime(): ?string{
+        $stmt = MyPdo::getInstance()->prepare(
+            <<<'SQL'
+        SELECT MAX(time) as last_time FROM SensorData
+SQL);
+        $stmt->execute();
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return $result['last_time'] ?? null;
+    }
+
     public function __toString(): string {
         return (string) $this->temperature;
     }

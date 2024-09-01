@@ -13,6 +13,7 @@ $webPage -> appendCssUrl("styles.css");
 
 $lastTemperature = Temperature::getLastTemperature();
 $allTemperature = Temperature::getAllTemperatures();
+$lastTemperatureTime = date('Y-m-d\TH:i:s', strtotime(Temperature::getLastTemperatureTime()));
 
 $max = Temperature::maxTemperature();
 $min = Temperature::minTemperature();
@@ -134,6 +135,25 @@ $webPage -> appendContent(
                     }
                 }
             });
+        });
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            const lastTemperatureTimeString = '$lastTemperatureTime';
+            console.log("Date formatée envoyée à JS:", lastTemperatureTimeString);
+        
+            const lastTemperatureTime = new Date(lastTemperatureTimeString);
+            const currentTime = new Date();
+        
+            console.log("Dernière température enregistrée:", lastTemperatureTime);
+            console.log("Heure actuelle:", currentTime);
+        
+            const timeDifference = currentTime - lastTemperatureTime; // Différence en millisecondes
+        
+            console.log("Différence de temps en millisecondes:", timeDifference);
+        
+            if (timeDifference > 86400000 ) {
+                alert("Aucune température reçue depuis plus de 24 heures. Le thermomètre est peut-être hors tension car la piscine est probablement démontée pour la période hivernale.");
+            }
         });
     </script>
 </html>
